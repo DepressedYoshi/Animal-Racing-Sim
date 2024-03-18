@@ -19,6 +19,7 @@ public class GamePlayScreen implements Screen {
     public static final float WORLD_HEIGHT = 768;
     public static final int FINISH_LINE = 900;
 
+
     //Object that allows us to draw all our graphics
     private SpriteBatch spriteBatch;
     //object tha allows us to draw shapes
@@ -28,8 +29,13 @@ public class GamePlayScreen implements Screen {
     //control POV - zoom in and out, or lock their view
     private Viewport viewport;
 
-    ArrayList<Animal> animals = new ArrayList<>();
-    BitmapFont deafaultfont = new BitmapFont();
+    private ArrayList<Animal> animals = new ArrayList<>();
+    private BitmapFont deafaultfont = new BitmapFont();
+    private long startTime;
+    private boolean winner = false;
+    private long winnerTime;
+    private String winnerName;
+
 
     //this runs one time at teh very beginning
     //all set up should happen here like a constructor
@@ -45,6 +51,7 @@ public class GamePlayScreen implements Screen {
         //??? black magic dont touch - some problme McElrea dont know
         shapeRenderer.setAutoShapeType(true);
         createAnimals();
+        startTime = System.currentTimeMillis();
     }
 
     private void createAnimals() {
@@ -62,7 +69,18 @@ public class GamePlayScreen implements Screen {
     }
 
     public void drawGUI(){
-        deafaultfont.draw(spriteBatch, "TIME: ", WORLD_WIDTH/2, WORLD_HEIGHT - 5);
+        long raceTime = System.currentTimeMillis() - startTime;
+        long secconds = raceTime / 1000;
+        long tenth = raceTime / 100  % 10 ;
+        deafaultfont.draw(spriteBatch, "TIME: " + secconds + "." + tenth, WORLD_WIDTH/2, WORLD_HEIGHT - 5);
+
+        //when win
+        if (winner){
+             secconds = (winnerTime - startTime)/ 1000;
+             tenth = (winnerTime - startTime) / 100  % 10 ;
+            deafaultfont.draw(spriteBatch, "WINNING TIME: " + secconds + "." + tenth, WORLD_WIDTH/2, WORLD_HEIGHT - 50);
+
+        }
 
     }
 
@@ -74,6 +92,12 @@ public class GamePlayScreen implements Screen {
         for(Animal a : animals){
             if (!a.isFinish()){
                 a.act(v);
+            }else {
+                if(!winner){
+                    winner = true;
+                    winnerTime = System.currentTimeMillis();
+                    winnerName = "WINNER NAME";
+                }
             }
         }
 
