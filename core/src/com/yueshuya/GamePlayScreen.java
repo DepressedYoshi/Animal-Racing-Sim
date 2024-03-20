@@ -1,6 +1,7 @@
 package com.yueshuya;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
@@ -32,6 +33,7 @@ public class GamePlayScreen implements Screen {
     private ArrayList<Animal> animals = new ArrayList<>();
     private BitmapFont deafaultfont = new BitmapFont();
     private long startTime;
+    private long allDoneTime = 0;
     private boolean winner = false;
     private long winnerTime;
     private String winnerName;
@@ -52,7 +54,6 @@ public class GamePlayScreen implements Screen {
         //??? black magic dont touch - some problme McElrea dont know
         shapeRenderer.setAutoShapeType(true);
         createAnimals();
-        startTime = System.currentTimeMillis();
     }
 
     private void createAnimals() {
@@ -73,18 +74,42 @@ public class GamePlayScreen implements Screen {
         long raceTime = System.currentTimeMillis() - startTime;
         long secconds = raceTime / 1000;
         long tenth = raceTime / 100  % 10 ;
-        deafaultfont.draw(spriteBatch, "TIME: " + secconds + "." + tenth, WORLD_WIDTH/2, WORLD_HEIGHT - 5);
+        deafaultfont.setColor(Color.BLACK);
+        //if racing and not all animal are done
+        if (racing && allDoneTime == 0) {
+            deafaultfont.draw(spriteBatch, "TIME: " + secconds + "." + tenth, 0, WORLD_HEIGHT - 5);
+        }
+        //else if they are not current racingf
+        else if(!racing) {
+            deafaultfont.draw(spriteBatch, "TIME: 0", 0, WORLD_HEIGHT - 5);
+        }
+        //elseif they are all done
+        else if(allDoneTime !=0){
+             secconds = (allDoneTime - startTime) / 1000;
+             tenth = (allDoneTime - startTime) / 100  % 10 ;
+            deafaultfont.draw(spriteBatch, "TIME: " + secconds + "." + tenth, 0, WORLD_HEIGHT - 5);
+        }
 
         //when win
         if (winner){
              secconds = (winnerTime - startTime)/ 1000;
              tenth = (winnerTime - startTime) / 100  % 10 ;
-            deafaultfont.draw(spriteBatch, "WINNING TIME: " + secconds + "." + tenth, WORLD_WIDTH/2, WORLD_HEIGHT - 50);
-            deafaultfont.draw(spriteBatch, "Congrats" + winnerName, WORLD_WIDTH/2, WORLD_HEIGHT - 350);
+            deafaultfont.draw(spriteBatch, "WINNING TIME: " + secconds + "." + tenth, 0, WORLD_HEIGHT - 50);
+            deafaultfont.draw(spriteBatch, "Congrats " + winnerName + "!!!", 0, WORLD_HEIGHT - 100);
+
+        }
+        if (alldone()){
 
         }
     }
-
+    public boolean alldone(){
+        for (Animal a: animals){
+            if (!a.isFinish()){
+                return false;
+            }
+        }
+        return true;
+    }
     public void raceAnimals(float v){
         for(Animal a : animals){
             if (!a.isFinish()){
@@ -98,12 +123,27 @@ public class GamePlayScreen implements Screen {
             }
         }
     }
+
+    public void handleKeyPresse(){
+        //isKeyJustPressed
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+            racing = true;
+            startTime = System.currentTimeMillis();
+        }
+    }
+
     //this method runs at FPS speed, repeatedly looping
     @Override
     public void render(float v) {
         //all AI Code goes here
         clearScreen();
-        raceAnimals(v);
+        if (allDoneTime == 0 && alldone()){
+            allDoneTime = System.currentTimeMillis();
+        }
+        handleKeyPresse();
+        if (racing){
+            raceAnimals(v);
+        }
         //all shape drawing mus happen here
         shapeRenderer.begin();
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
