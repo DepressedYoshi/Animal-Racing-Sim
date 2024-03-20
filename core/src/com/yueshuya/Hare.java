@@ -11,8 +11,8 @@ public class Hare extends Animal{
     private long restTimeOver = 0;
 
 
-    public Hare(float y, float speed) {
-        super(y, speed);
+    public Hare(float y, float speed, String name) {
+        super(y, speed, name);
         setSpeed((getSpeed() * 5) + (float) (-0.5 + Math.random()));
         setImage(new Texture("Hare moving.png"));
         restImage = new Texture("Hare sleeping.png");

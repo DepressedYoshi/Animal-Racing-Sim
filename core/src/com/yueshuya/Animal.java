@@ -8,10 +8,12 @@ public class Animal {
     protected float y;
     protected float speed;
     protected Texture image;
+    protected String name;
 
-    public Animal(float y, float speed){
+    public Animal(float y, float speed, String name){
         this.x = 10;
         this.y = y;
+        this.name = name;
         this.speed = speed;
         this.image = new Texture("Animal foot.png");
     }
@@ -59,5 +61,13 @@ public class Animal {
 
     public Texture getImage() {
         return image;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

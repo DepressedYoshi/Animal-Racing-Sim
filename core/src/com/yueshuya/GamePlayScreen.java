@@ -35,6 +35,7 @@ public class GamePlayScreen implements Screen {
     private boolean winner = false;
     private long winnerTime;
     private String winnerName;
+    private boolean racing = false;
 
 
     //this runs one time at teh very beginning
@@ -55,12 +56,12 @@ public class GamePlayScreen implements Screen {
     }
 
     private void createAnimals() {
-        Hare hare = new Hare(650, 1);
+        Hare hare = new Hare(650, 1, "Adam the Hare");
         animals.add(hare);
-        animals.add(new Turtle(550, 1, hare));
-        animals.add(new Elephant(450, 1));
-        animals.add(new Kangaroo(350, 1));
-        animals.add(new Rat(250, 1));
+        animals.add(new Turtle(550, 1, hare, "Bob The turtle"));
+        animals.add(new Elephant(450, 1,"Calvin the elephant"));
+        animals.add(new Kangaroo(350, 1,"David the Kangaroo"));
+        animals.add(new Rat(250, 1,"Elvis the rat"));
     }
 
     public void clearScreen(){
@@ -79,28 +80,30 @@ public class GamePlayScreen implements Screen {
              secconds = (winnerTime - startTime)/ 1000;
              tenth = (winnerTime - startTime) / 100  % 10 ;
             deafaultfont.draw(spriteBatch, "WINNING TIME: " + secconds + "." + tenth, WORLD_WIDTH/2, WORLD_HEIGHT - 50);
+            deafaultfont.draw(spriteBatch, "Congrats" + winnerName, WORLD_WIDTH/2, WORLD_HEIGHT - 350);
 
         }
-
     }
 
+    public void raceAnimals(float v){
+        for(Animal a : animals){
+            if (!a.isFinish()){
+                a.act(v);
+            }else { //some finish
+                if(!winner){//are they the first shin
+                    winner = true;
+                    winnerTime = System.currentTimeMillis();
+                    winnerName = a.getName();
+                }
+            }
+        }
+    }
     //this method runs at FPS speed, repeatedly looping
     @Override
     public void render(float v) {
         //all AI Code goes here
         clearScreen();
-        for(Animal a : animals){
-            if (!a.isFinish()){
-                a.act(v);
-            }else {
-                if(!winner){
-                    winner = true;
-                    winnerTime = System.currentTimeMillis();
-                    winnerName = "WINNER NAME";
-                }
-            }
-        }
-
+        raceAnimals(v);
         //all shape drawing mus happen here
         shapeRenderer.begin();
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled);

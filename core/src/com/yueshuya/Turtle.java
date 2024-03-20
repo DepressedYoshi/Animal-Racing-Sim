@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class Turtle extends Animal{
     private Hare hare;
-    public Turtle(float y, float speed, Hare hare) {
-        super(y, speed);
+    public Turtle(float y, float speed, Hare hare, String name) {
+        super(y, speed, name);
         setSpeed((getSpeed() * 0.85f) + (float) (-0.5 + Math.random()));
         setImage(new Texture("Turtle.png"));
         this.hare = hare;

@@ -9,8 +9,8 @@ public class Rat extends Animal {
     private long restEndTime = 0;
     private boolean isResting = false;
 
-    public Rat(float y, float speed) {
-        super(y, speed);
+    public Rat(float y, float speed, String name) {
+        super(y, speed, name);
         setSpeed((getSpeed() * 5) + (float) (-2f + Math.random()*3));
         setImage(new Texture("Animal Sim Rat.png"));
     }

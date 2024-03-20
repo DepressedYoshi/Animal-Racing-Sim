@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class Kangaroo extends Animal{
     private float mutation = (float) (-1.5 + Math.random()*2);
-    public Kangaroo(float y, float speed) {
-        super(y, speed);
+    public Kangaroo(float y, float speed, String name) {
+        super(y, speed, name);
         setSpeed((getSpeed() * 3f) + mutation);
         setImage(new Texture("Kangaroo.png"));
     }
